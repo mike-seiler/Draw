@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Jquery Template</title>
+
+<style type="text/css">
+*{margin:0; padding:0;}
+canvas{background:red;}
+</style>
+
+</head>
+
+<body>
+<a href="canvas.html">Click here to draw your own picture</a>
+
+<div id="container">
+</div>
+<script src="jquery.min.js"></script>
+<script src="canvas.js"></script>
+<script type="text/javascript">
+    function list_all_data(data){
+        drawer_main = []
+        drawable_main = []
+        for( var i in data)
+        {
+            $div = $("<div/>")
+            $name = $("<span/>").text(data[i]['name']);
+            $div.append($name);
+            $div.append('<canvas width="1600" height="1200" id="canvas'+i+'"></canvas>')
+            $("#container").append($div)
+            drawer_main[i]= new main();
+            drawer_main[i].global_data = data[i]['data'].split(",").reverse();
+            drawer_main[i].b_canvas = $("#canvas"+i)[0]
+            drawer_main[i].b_context = drawer_main[i].b_canvas.getContext("2d");
+            drawer_main[i].name = data[i]['name'];
+            drawer_main[i].do_twenty();
+            drawable_main[i] = new drawable('canvas'+i);
+            drawable_main[i].raw_data = drawer_main[i].global_data || [];
+            console.log(drawable_main[i].raw_data.length);
+            drawable_main[i].init();
+        }
+
+    }
+
+
+    function main(){
+        this._data = []
+        this.cnt = 40;
+        this.old_mouse_x = -1;
+        this.old_mouse_y = -1;
+        this.time = 0
+        this.global_data = []
+        this.name = '';
+        this.data = [];
+
+        this.do_twenty = function(){
+            this._data = [];
+            for ( var i = 0; i < this.cnt; ++i)
+            {
+                if( this.global_data.length > 0)
+                this._data.push(this.global_data.pop());
+            }
+            this.draw();
+            if( this.global_data.length > 0)
+                   setTimeout(function(thisObj) { thisObj.do_twenty(); }, 0, this)
+                  //this.do_twenty()
+        }
+
+        this.draw = function(){
+            for( var pixel_count  = 0 ; pixel_count < this._data.length; pixel_count++)
+            {
+                var pair = this._data[pixel_count].split(":");
+                this.new_mouse_x = pair[0];
+                this.new_mouse_y = pair[1];
+                if( this.old_mouse_x != -1){
+                    this.b_context.moveTo(this.old_mouse_x,this.old_mouse_y);
+                    this.b_context.lineTo(this.new_mouse_x,this.new_mouse_y);
+                }
+                this.old_mouse_y = this.new_mouse_y;
+                this.old_mouse_x = this.new_mouse_x;
+            }
+            this.b_context.strokeStyle = "#000";
+            this.b_context.stroke();
+        }
+
+        return this;//important
+    }
+
+</script>
+<script src="list.php"></script>
+</body>
+</html>
+

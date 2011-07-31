@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Jquery Template</title>
+
+<style type="text/css">
+*{margin:0; padding:0;}
+canvas{background:red;}
+</style>
+<script src="jquery.min.js"></script>
+<script src="canvas.js"></script>
+
+
+</head>
+
+<body>
+<a href="/draw/">Please click here to see all saved drawings.<a>
+<div>Click anywhere on the canvas to save</div>
+<div style="width:1600px;height:1200px; display:block;"><canvas width="1600" height="1200" id="canvas"></canvas>
+</div>
+
+
+<script type="text/javascript">
+
+$(function(){
+var draw = new drawable('canvas');
+draw.init();
+});
+
+</script>
+
+</body>
+</html>
+
